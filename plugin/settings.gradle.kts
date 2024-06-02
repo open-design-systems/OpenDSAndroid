@@ -1,5 +1,4 @@
 pluginManagement {
-    includeBuild("plugin")
     repositories {
         google {
             content {
@@ -20,7 +19,15 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("plugin")
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
+}
 
-rootProject.name = "OpenDesignSystem"
-include(":sample")
+rootProject.name = "Plugin"
+include(":processor")
+include(":generator")
+include(":contract-models")
