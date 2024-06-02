@@ -1,7 +1,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.compose.compiler)
     id("com.opends")
+}
+
+openDS {
+    themeLocation = "${projectDir}/theme/sample.json"
 }
 
 android {
@@ -23,7 +28,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        //kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     buildTypes {
@@ -50,6 +55,7 @@ dependencies {
     implementation(libs.androidx.icons.extended)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.material3)
 }

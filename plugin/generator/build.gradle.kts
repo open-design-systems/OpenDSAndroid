@@ -21,4 +21,6 @@ dependencies {
     implementation(gradleApi())
 
     implementation(project(":processor"))
+
+    implementation(libs.plgn.gradle)
 }

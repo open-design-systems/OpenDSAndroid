@@ -1,14 +1,14 @@
 package com.opends.processor
 
-import androidx.compose.ui.graphics.Color
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.OpenDesignSystemResponse
+import com.opends.processor.color.ColorCreator
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import kotlinx.serialization.json.Json
+import java.io.File
 import java.io.IOException
 import java.net.URISyntaxException
 import java.net.URL
@@ -17,40 +17,40 @@ import java.nio.file.Paths
 
 const val PACKAGE = "com.open.design.system"
 
-fun main() {
+private const val LOCAL_COLORS = "LocalOpenDsColors"
 
-    val result = readFileFromResources("sample.json")
+val openColorsClass = ClassName(PACKAGE, "OpenColors")
 
+fun processFile(
+    input: String,
+    output: File
+): List<FileSpec> {
     Json {
         ignoreUnknownKeys = true
     }
 
-    val decoded = Json.decodeFromString<OpenDesignSystemResponse>(result)
+    val decoded = Json.decodeFromString<OpenDesignSystemResponse>(input)
 
-    val colorFile =
-        writeThemeAccessor(
-            "OpenColors",
-            decoded.defaultValues.colors,
-            Color::class.java
+    val listOfFiles = mutableListOf<FileSpec>()
+    val themeProperties = mutableSetOf<PropertySpec>()
+
+    val creators = setOf(
+        ColorCreator()
+    )
+
+    creators.forEach {
+        listOfFiles.addAll(
+            it.createFiles(decoded.defaultValues)
         )
-    writeFile("OpenColor", colorFile)
 
-    val set = buildSet {
-        val color = PropertySpec
-            .builder("color", ClassName(PACKAGE, "OpenColors"))
-            .getter(
-                FunSpec.getterBuilder()
-
-                    .build()
-            )
-            .build()
-
-        add(color)
+        themeProperties.addAll(it.createThemeProperty())
     }
 
-    val themeObject = writeThemeObject(set)
+    val themeObject = writeThemeObject(themeProperties)
 
-    writeTheme(themeObject)
+    writeTheme(themeObject, output)
+
+    return listOfFiles
 }
 
 private fun writeThemeObject(
@@ -60,20 +60,29 @@ private fun writeThemeObject(
     .build()
 
 private fun writeTheme(
-    themeObject: TypeSpec
+    themeObject: TypeSpec,
+    output: File
 ) {
-    writeFile("OpenDesignSystemTheme", themeObject)
+    writeFile("OpenDesignSystemTheme", themeObject, output)
 }
 
 private fun writeFile(
     fileName: String,
-    type: TypeSpec
+    type: TypeSpec,
+    output: File
 ) =
     FileSpec
         .builder(PACKAGE, fileName)
+        .addImport(
+            "androidx.compose.runtime",
+            "getValue",
+            "setValue",
+            "mutableStateOf",
+            "staticCompositionLocalOf"
+        )
         .addType(type)
         .build()
-        .writeTo(System.out)
+        .writeTo(output)
 
 @Throws(URISyntaxException::class, IOException::class)
 fun readFileFromResources(filename: String): String {
