@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OpenColor(
-    val meta: MetaInformation,
+    override val meta: MetaInformation,
     val light: ColorData,
     val dark: ColorData
-)
+): OpenType
 
 @Serializable
 data class ColorData(

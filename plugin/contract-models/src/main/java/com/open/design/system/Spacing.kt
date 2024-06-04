@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Spacing(
-    val meta : MetaInformation,
+    override val meta: MetaInformation,
     val value: Float
-)
+) : OpenType

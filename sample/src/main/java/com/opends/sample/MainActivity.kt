@@ -1,9 +1,13 @@
 package com.opends.sample
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.open.design.system.OpenDesignSystemTheme
 
@@ -32,5 +36,45 @@ fun Test() {
             color = OpenDesignSystemTheme.color.secondary,
             text = "Text working"
         )
+
+        Box(
+            Modifier
+                .size(OpenDesignSystemTheme.space.lg)
+                .background(OpenDesignSystemTheme.color.primary)
+        ) {
+
+        }
+
+        Box(
+            Modifier
+                .size(OpenDesignSystemTheme.space.md)
+                .background(OpenDesignSystemTheme.color.primary)
+        ) {
+
+        }
+
+        Box(
+            Modifier
+                .size(OpenDesignSystemTheme.space.sm)
+                .background(OpenDesignSystemTheme.color.primary)
+        ) {
+
+        }
+
+        Box(
+            Modifier
+                .size(OpenDesignSystemTheme.space.xl)
+                .background(OpenDesignSystemTheme.color.primary)
+        ) {
+
+        }
+
+        Box(
+            Modifier
+                .size(OpenDesignSystemTheme.space.xs)
+                .background(OpenDesignSystemTheme.color.primary)
+        ) {
+
+        }
     }
 }

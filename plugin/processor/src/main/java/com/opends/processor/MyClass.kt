@@ -17,14 +17,13 @@ import java.nio.file.Paths
 
 const val PACKAGE = "com.open.design.system"
 
-private const val LOCAL_COLORS = "LocalOpenDsColors"
-
 val openColorsClass = ClassName(PACKAGE, "OpenColors")
+val openSpaceClass = ClassName(PACKAGE, "OpenSpace")
 
 fun processFile(
     input: String,
     output: File
-): List<FileSpec> {
+) {
     Json {
         ignoreUnknownKeys = true
     }
@@ -35,7 +34,8 @@ fun processFile(
     val themeProperties = mutableSetOf<PropertySpec>()
 
     val creators = setOf(
-        ColorCreator()
+        ColorCreator(),
+        SpaceCreator()
     )
 
     creators.forEach {
@@ -48,9 +48,11 @@ fun processFile(
 
     val themeObject = writeThemeObject(themeProperties)
 
-    writeTheme(themeObject, output)
+    listOfFiles.add(writeTheme(themeObject))
 
-    return listOfFiles
+    listOfFiles.forEach {
+        it.writeTo(output)
+    }
 }
 
 private fun writeThemeObject(
@@ -61,15 +63,11 @@ private fun writeThemeObject(
 
 private fun writeTheme(
     themeObject: TypeSpec,
-    output: File
-) {
-    writeFile("OpenDesignSystemTheme", themeObject, output)
-}
+) = writeFile("OpenDesignSystemTheme", themeObject)
 
 private fun writeFile(
     fileName: String,
     type: TypeSpec,
-    output: File
 ) =
     FileSpec
         .builder(PACKAGE, fileName)
@@ -82,7 +80,6 @@ private fun writeFile(
         )
         .addType(type)
         .build()
-        .writeTo(output)
 
 @Throws(URISyntaxException::class, IOException::class)
 fun readFileFromResources(filename: String): String {

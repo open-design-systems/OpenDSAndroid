@@ -1,7 +1,7 @@
 package com.opends.processor
 
 import androidx.compose.runtime.Stable
-import com.open.design.system.OpenColor
+import com.open.design.system.OpenType
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
@@ -10,7 +10,7 @@ import com.squareup.kotlinpoet.TypeSpec
 
 fun <T> writeThemeAccessor(
     name: String,
-    colors: Set<OpenColor>,
+    colors: Set<OpenType>,
     type: Class<T>
 ): TypeSpec {
     val mapped = colors.map {

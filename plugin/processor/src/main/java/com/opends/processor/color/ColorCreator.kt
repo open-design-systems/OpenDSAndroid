@@ -144,7 +144,7 @@ fun TypeSpec.toFileSpec(): FileSpec {
             "getValue",
             "setValue",
             "mutableStateOf",
-            "staticCompositionLocalOf"
+            "staticCompositionLocalOf",
         )
         .addType(this)
         .build()
