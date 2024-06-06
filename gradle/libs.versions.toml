@@ -14,6 +14,7 @@ appcompatV7 = "28.0.0"
 composeBom = "2024.05.00"
 activityCompose = "1.9.0"
 plugin-gradle = "8.1.4"
+composeNavigation = "2.7.7"
 
 [libraries]
 plgn-gradle = { module = "com.android.tools.build:gradle", version.ref = "plugin-gradle" }
@@ -41,6 +42,7 @@ androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-compose-ui-util = { module = "androidx.compose.ui:ui-util" }
 androidx-compose-ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding" }
+androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation"}
 
 [plugins]
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
