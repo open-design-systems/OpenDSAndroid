@@ -42,14 +42,5 @@ jobs:
           java-version: 17
           distribution: adopt
 
-      - name: Setup ruby
-        uses: actions/setup-ruby@v1
-
-      - name: Bundle Install
-        run: |
-          sudo apt-get -yqq install libpq-dev
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-
       - name: Build app
         run: ./gradlew assembleDebug
