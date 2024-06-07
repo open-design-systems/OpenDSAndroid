@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Spacing
 import com.opends.processor.color.toFileSpec
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
@@ -83,10 +84,12 @@ class SpaceCreator : TypeCreator {
     private fun createFileAccessors(
         content: OpenDesignSystem
     ): FileSpec {
+        val className = ClassName("androidx.compose.ui.unit", "Dp")
+
         return writeThemeAccessor(
             "OpenSpace",
             content.spacing,
-            Dp::class.java
+            className
         ).toFileSpec()
     }
 

@@ -2,16 +2,17 @@ package com.opends.processor
 
 import androidx.compose.runtime.Stable
 import com.open.design.system.OpenType
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
-fun <T> writeThemeAccessor(
+fun writeThemeAccessor(
     name: String,
     colors: Set<OpenType>,
-    type: Class<T>
+    type: ClassName
 ): TypeSpec {
     val mapped = colors.map {
         PropertySpec.builder(
