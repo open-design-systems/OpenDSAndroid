@@ -10,6 +10,7 @@ import com.opends.processor.PACKAGE
 import com.opends.processor.TypeCreator
 import com.opends.processor.openColorsClass
 import com.opends.processor.writeThemeAccessor
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -128,10 +129,12 @@ class ColorCreator : TypeCreator {
     private fun createFileAccessors(
         content: OpenDesignSystem
     ): FileSpec {
+        val className = ClassName("androidx.compose.ui.graphics", "Color")
+
         return writeThemeAccessor(
             "OpenColors",
             content.colors,
-            Color::class.java
+            className
         ).toFileSpec()
     }
 }

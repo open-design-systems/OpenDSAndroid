@@ -27,6 +27,7 @@ const val PACKAGE = "com.open.design.system"
 
 val openColorsClass = ClassName(PACKAGE, "OpenColors")
 val openSpaceClass = ClassName(PACKAGE, "OpenSpace")
+val openTypographyClass = ClassName(PACKAGE, "OpenTypography")
 
 fun processFile(
     input: String,
@@ -43,7 +44,8 @@ fun processFile(
 
     val creators = setOf(
         ColorCreator(),
-        SpaceCreator()
+        SpaceCreator(),
+        TypographyCreator()
     )
 
     creators.forEach {
