@@ -1,12 +1,20 @@
 package com.opends.processor
 
+import androidx.compose.runtime.Composable
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.OpenDesignSystemResponse
 import com.opends.processor.color.ColorCreator
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.UNIT
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
@@ -79,6 +87,34 @@ private fun writeFile(
             "staticCompositionLocalOf"
         )
         .addType(type)
+        .addFunction(
+            FunSpec.builder("OpenDesignSystemTheme")
+                .addAnnotation(Composable::class.java)
+                .also {
+                    val isDarkTheme =
+                        MemberName("androidx.compose.foundation", "isSystemInDarkTheme")
+
+                    it.addParameter(
+                        ParameterSpec.builder("isDarkTheme", Boolean::class.java)
+                            .defaultValue(
+                                CodeBlock.of("%M()", isDarkTheme)
+                            )
+                            .build()
+                    )
+                }
+                .also {
+                    val customAnnotation = AnnotationSpec.builder(Composable::class.java).build()
+                    it.addParameter(
+                        ParameterSpec.builder(
+                            "content",
+                            LambdaTypeName.get(returnType = UNIT)
+                                .copy(annotations = listOf(customAnnotation))
+                        )
+                            .build()
+                    )
+                }
+                .build()
+        )
         .build()
 
 @Throws(URISyntaxException::class, IOException::class)
