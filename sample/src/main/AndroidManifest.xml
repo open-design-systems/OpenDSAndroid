@@ -8,6 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:name="com.opends.sample.MainActivity"
             android:exported="true">
             <intent-filter>
