@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Shadows(
-    val meta: MetaInformation,
-    val elevation: String,
+    override val meta: MetaInformation,
+    val elevation: Float,
     val shadowColor: String,
     val shadowOpacity: Float,
     val shadowOffset: ShadowOffset,
     val shadowRadius: Float
-)
+): OpenType
 
 @Serializable
 data class ShadowOffset(
