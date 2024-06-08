@@ -164,7 +164,7 @@ class ShadowCreator : TypeCreator {
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("ShadowType(")
+        codeBlock.addStatement("OpenShadow(")
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
