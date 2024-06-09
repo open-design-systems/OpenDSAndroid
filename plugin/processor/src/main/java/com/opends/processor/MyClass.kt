@@ -3,7 +3,10 @@ package com.opends.processor
 import androidx.compose.runtime.Composable
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.OpenDesignSystemResponse
-import com.opends.processor.color.ColorCreator
+import com.opends.processor.creators.ColorCreator
+import com.opends.processor.creators.ShadowCreator
+import com.opends.processor.creators.SpaceCreator
+import com.opends.processor.creators.TypographyCreator
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock

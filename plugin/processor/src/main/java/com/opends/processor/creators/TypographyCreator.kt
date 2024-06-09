@@ -1,10 +1,12 @@
-package com.opends.processor
+package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Typography
-import com.opends.processor.color.toFileSpec
+import com.opends.processor.PACKAGE
+import com.opends.processor.openTypographyClass
+import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DelicateKotlinPoetApi

@@ -1,4 +1,4 @@
-package com.opends.processor
+package com.opends.processor.creators
 
 import com.open.design.system.OpenDesignSystem
 import com.squareup.kotlinpoet.FileSpec

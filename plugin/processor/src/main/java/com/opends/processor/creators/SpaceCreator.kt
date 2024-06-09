@@ -1,11 +1,13 @@
-package com.opends.processor
+package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Spacing
-import com.opends.processor.color.toFileSpec
+import com.opends.processor.PACKAGE
+import com.opends.processor.openSpaceClass
+import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DelicateKotlinPoetApi
@@ -96,12 +98,11 @@ class SpaceCreator : TypeCreator {
     @OptIn(DelicateKotlinPoetApi::class)
     override fun createThemeProperty(): Set<PropertySpec> {
         return buildSet {
-            val colorProperty = PropertySpec
-                .builder("space", openSpaceClass)
+            val colorProperty = PropertySpec.builder("space", openSpaceClass)
                 .getter(
                     FunSpec.getterBuilder()
                         .addAnnotation(Composable::class.java)
-                        .addStatement("return ${LOCAL_SPACE}.current")
+                        .addStatement("return $LOCAL_SPACE.current")
                         .build()
                 )
                 .build()
@@ -112,7 +113,7 @@ class SpaceCreator : TypeCreator {
     }
 
     private fun createLocalColorStaticComposition(): PropertySpec {
-        return PropertySpec.builder(
+        return PropertySpec.Companion.builder(
             LOCAL_SPACE,
             ProvidableCompositionLocal::class.java.asClassName().parameterizedBy(openSpaceClass)
         )

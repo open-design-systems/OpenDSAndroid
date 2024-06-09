@@ -1,4 +1,4 @@
-package com.opends.processor
+package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -7,7 +7,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Shadows
-import com.opends.processor.color.toFileSpec
+import com.opends.processor.PACKAGE
+import com.opends.processor.openShadowClass
+import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.DelicateKotlinPoetApi
@@ -141,8 +143,7 @@ class ShadowCreator : TypeCreator {
 
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
-                CodeBlock
-                    .builder()
+                CodeBlock.builder()
                     .addStatement("%M(", member)
                     .addStatement("elevation=%L.%M,", pair.second.elevation, dpMember)
                     .addStatement("offset=%L,", offSetInstance)

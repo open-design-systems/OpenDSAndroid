@@ -1,4 +1,4 @@
-package com.opends.processor.color
+package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -7,7 +7,7 @@ import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
 import com.opends.processor.PACKAGE
-import com.opends.processor.TypeCreator
+import com.opends.processor.creators.TypeCreator
 import com.opends.processor.openColorsClass
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
