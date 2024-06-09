@@ -159,7 +159,7 @@
           "name": "elevation1",
           "description": ""
         },
-        "elevation": "1dp",
+        "elevation": 1.0,
         "shadowColor": "#000000",
         "shadowOpacity": 0.1,
         "shadowOffset": {
@@ -173,7 +173,7 @@
           "name": "elevation2",
           "description": ""
         },
-        "elevation": "2dp",
+        "elevation": 1.0,
         "shadowColor": "#000000",
         "shadowOpacity": 0.2,
         "shadowOffset": {
