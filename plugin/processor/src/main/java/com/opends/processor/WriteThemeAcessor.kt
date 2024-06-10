@@ -9,12 +9,14 @@ import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
+private const val GET_TOKENS_FUNCTION = "gettokens"
+
 fun writeThemeAccessor(
     name: String,
-    colors: Set<OpenType>,
+    content: Set<OpenType>,
     type: ClassName
 ): TypeSpec {
-    val mapped = colors.map {
+    val mapped = content.map {
         PropertySpec.builder(
             it.meta.name,
             type
@@ -29,12 +31,13 @@ fun writeThemeAccessor(
             .build()
     }
 
-    val mappedParameters = colors.map {
+    val mappedParameters = content.map {
         ParameterSpec.builder(
             it.meta.name,
             type
         ).build()
     }
+
 
 
     return TypeSpec.classBuilder(name)
@@ -45,5 +48,22 @@ fun writeThemeAccessor(
                 .addParameters(mappedParameters)
                 .build()
         )
+        .addFunction(createFunctionToRetrieveTokens(content))
+        .build()
+}
+
+private fun createFunctionToRetrieveTokens(
+    content: Set<OpenType>,
+): FunSpec {
+    val getTokens = FunSpec.builder(GET_TOKENS_FUNCTION)
+        .addModifiers(KModifier.INTERNAL)
+        .addStatement("listOf(")
+
+    for (item in content.map { it.meta.name }) {
+
+        getTokens.addStatement("%S to $item,", item)
+    }
+
+    return getTokens.addStatement(")")
         .build()
 }
