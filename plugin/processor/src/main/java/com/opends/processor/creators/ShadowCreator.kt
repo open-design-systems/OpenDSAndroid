@@ -174,7 +174,7 @@ class ShadowCreator(
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(PACKAGE, filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -192,6 +192,8 @@ class ShadowCreator(
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {
-        return themePropertyCreator.createTheme(filesTypesFactory)
+        return themePropertyCreator.createTheme(
+            creatorFilesName = filesTypesFactory
+        )
     }
 }

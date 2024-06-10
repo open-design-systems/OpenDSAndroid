@@ -13,7 +13,7 @@ class FilesTypesFactory(
 
     fun createInstanceClassName() = "Open${typeName}Instance"
 
-    fun createStatlicCompositionName() = "LocalOpenDs${typeName}"
+    fun createStaticCompositionName() = "LocalOpenDs${typeName}"
 
     fun createClassName(): ClassName = ClassName(PACKAGE, openClass())
     fun baseName() = typeName

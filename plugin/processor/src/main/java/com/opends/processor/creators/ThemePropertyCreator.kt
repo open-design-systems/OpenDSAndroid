@@ -1,7 +1,6 @@
 package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
-import com.opends.processor.openTypographyClass
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 
@@ -11,6 +10,7 @@ class ThemePropertyCreator(
     ) {
 
     fun createTheme(
+        namePrefix: String = "",
         creatorFilesName: FilesTypesFactory
     ): Set<PropertySpec> {
         return buildSet {
@@ -21,7 +21,7 @@ class ThemePropertyCreator(
                 .getter(
                     FunSpec.getterBuilder()
                         .addAnnotation(Composable::class.java)
-                        .addStatement("return ${creatorFilesName.createStatlicCompositionName()}.current")
+                        .addStatement("return ${creatorFilesName.createStaticCompositionName()}.current")
                         .build()
                 )
                 .build()
@@ -29,9 +29,9 @@ class ThemePropertyCreator(
             add(colorProperty)
             add(
                 staticComposition.create(
-                    creatorFilesName.createStatlicCompositionName(),
-                    creatorFilesName.createInstanceClassName(),
-                    openTypographyClass
+                    creatorFilesName.createStaticCompositionName(),
+                    namePrefix + creatorFilesName.createInstanceClassName(),
+                    creatorFilesName.createClassName()
                 )
             )
         }

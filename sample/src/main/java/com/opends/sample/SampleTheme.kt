@@ -4,16 +4,16 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.open.design.system.DarkOpenDSColors
-import com.open.design.system.LightOpenDSColors
+import com.open.design.system.DarkOpenColorInstance
+import com.open.design.system.LightOpenColorInstance
 import com.open.design.system.OpenTypographyInstance
 
 @Composable
 fun SampleTheme(content: @Composable () -> Unit) {
     val colors = if (isNightMode()) {
-        DarkOpenDSColors
+        DarkOpenColorInstance
     } else {
-        LightOpenDSColors
+        LightOpenColorInstance
     }
 
     val newColors = MaterialTheme.colorScheme.copy(

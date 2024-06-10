@@ -5,7 +5,6 @@ import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
 import com.opends.processor.PACKAGE
-import com.opends.processor.openColorsClass
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -13,7 +12,6 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
-private const val LOCAL_COLORS = "LocalOpenDsColors"
 
 class ColorCreator(
     private val themePropertyCreator: ThemePropertyCreator,
@@ -28,19 +26,24 @@ class ColorCreator(
 
             add(createColorPallet(content.colors))
 
-            add(writeColorInstance("Light", content.colors))
-            add(writeColorInstance("Dark", content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, content.colors))
         }
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {
-        return themePropertyCreator.createTheme(filesTypesFactory)
+        return themePropertyCreator.createTheme(
+            namePrefix = COLOR_INSTANCE_MODIFIER_LIGHT,
+            creatorFilesName = filesTypesFactory
+        )
     }
 
-    fun writeColorInstance(
+    private fun writeColorInstance(
         modifier: String,
         colors: Set<OpenColor>
     ): FileSpec {
+        val propertyName = modifier + filesTypesFactory.createInstanceClassName()
+
         val codeBlock = CodeBlock.builder()
 
         codeBlock.addStatement("${filesTypesFactory.openClass()}(")
@@ -51,11 +54,14 @@ class ColorCreator(
 
         codeBlock.addStatement(")")
 
-        val property = PropertySpec.builder("${modifier}OpenDSColors", openColorsClass)
+        val property = PropertySpec.builder(
+            propertyName,
+            filesTypesFactory.createClassName()
+        )
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, "${modifier}OpenDSColors")
+        return FileSpec.builder(PACKAGE, propertyName)
             .addProperty(property)
             .build()
     }
@@ -71,14 +77,14 @@ class ColorCreator(
 
         val mappedColors = lightColors.map {
             colorsToPropertySpec(
-                "Light",
+                COLOR_INSTANCE_MODIFIER_LIGHT,
                 it
             )
         }
 
         val mappedColorsDark = darkColors.map {
             colorsToPropertySpec(
-                "Dark",
+                COLOR_INSTANCE_MODIFIER_DARK,
                 it
             )
         }
@@ -109,6 +115,11 @@ class ColorCreator(
             content.colors,
             className
         ).toFileSpec()
+    }
+
+    private companion object {
+        private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
+        private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
     }
 }
 

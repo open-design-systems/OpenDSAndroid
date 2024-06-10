@@ -127,6 +127,8 @@ class TypographyCreator(
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {
-        return themePropertyCreator.createTheme(filesTypesFactory)
+        return themePropertyCreator.createTheme(
+            creatorFilesName = filesTypesFactory
+        )
     }
 }
