@@ -3,6 +3,7 @@ package com.opends.processor.creators
 import androidx.compose.runtime.Composable
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
+import java.util.Locale
 
 class ThemePropertyCreator(
     private val staticComposition: StaticCompositionCreator,
@@ -15,7 +16,7 @@ class ThemePropertyCreator(
     ): Set<PropertySpec> {
         return buildSet {
             val colorProperty = PropertySpec.builder(
-                creatorFilesName.baseName(),
+                creatorFilesName.baseName().lowercase(Locale.ENGLISH),
                 creatorFilesName.createClassName()
             )
                 .getter(
