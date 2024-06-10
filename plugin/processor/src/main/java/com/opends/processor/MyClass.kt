@@ -3,7 +3,14 @@ package com.opends.processor
 import androidx.compose.runtime.Composable
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.OpenDesignSystemResponse
-import com.opends.processor.color.ColorCreator
+import com.opends.processor.creators.ColorCreator
+import com.opends.processor.creators.CreatorFilesName
+import com.opends.processor.creators.FilesTypesFactory
+import com.opends.processor.creators.ShadowCreator
+import com.opends.processor.creators.SpaceCreator
+import com.opends.processor.creators.StaticCompositionCreator
+import com.opends.processor.creators.ThemePropertyCreator
+import com.opends.processor.creators.TypographyCreator
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -43,11 +50,26 @@ fun processFile(
     val listOfFiles = mutableListOf<FileSpec>()
     val themeProperties = mutableSetOf<PropertySpec>()
 
+    val themePropertyCreator = ThemePropertyCreator(
+        staticComposition = StaticCompositionCreator()
+    )
     val creators = setOf(
-        ColorCreator(),
-        SpaceCreator(),
-        TypographyCreator(),
-        ShadowCreator()
+        ColorCreator(
+            themePropertyCreator = themePropertyCreator,
+            filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ColorNames()),
+        ),
+        SpaceCreator(
+            themePropertyCreator = themePropertyCreator,
+            filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.SpaceNames()),
+        ),
+        TypographyCreator(
+            themePropertyCreator = themePropertyCreator,
+            filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.TypographyNames()),
+        ),
+        ShadowCreator(
+            themePropertyCreator = themePropertyCreator,
+            filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ShadowNames()),
+        )
     )
 
     creators.forEach {

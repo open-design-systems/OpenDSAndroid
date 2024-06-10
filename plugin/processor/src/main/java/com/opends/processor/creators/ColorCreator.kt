@@ -1,28 +1,22 @@
-package com.opends.processor.color
+package com.opends.processor.creators
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.graphics.Color
 import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
 import com.opends.processor.PACKAGE
-import com.opends.processor.TypeCreator
-import com.opends.processor.openColorsClass
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 
-private const val LOCAL_COLORS = "LocalOpenDsColors"
 
-class ColorCreator : TypeCreator {
+class ColorCreator(
+    private val themePropertyCreator: ThemePropertyCreator,
+    private val filesTypesFactory: FilesTypesFactory,
+) : TypeCreator {
 
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -32,45 +26,27 @@ class ColorCreator : TypeCreator {
 
             add(createColorPallet(content.colors))
 
-            add(writeColorInstance("Light", content.colors))
-            add(writeColorInstance("Dark", content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, content.colors))
         }
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {
-        return buildSet {
-            val colorProperty = PropertySpec
-                .builder("color", openColorsClass)
-                .getter(
-                    FunSpec.getterBuilder()
-                        .addAnnotation(Composable::class.java)
-                        .addStatement("return $LOCAL_COLORS.current")
-                        .build()
-                )
-                .build()
-
-            add(colorProperty)
-            add(createLocalColorStaticComposition())
-        }
-    }
-
-    private fun createLocalColorStaticComposition(): PropertySpec {
-        return PropertySpec.builder(
-            LOCAL_COLORS,
-            ProvidableCompositionLocal::class.java.asClassName().parameterizedBy(openColorsClass)
+        return themePropertyCreator.createTheme(
+            namePrefix = COLOR_INSTANCE_MODIFIER_LIGHT,
+            creatorFilesName = filesTypesFactory
         )
-            .addModifiers(KModifier.PRIVATE)
-            .initializer("staticCompositionLocalOf { LightOpenDSColors }")
-            .build()
     }
 
-    fun writeColorInstance(
+    private fun writeColorInstance(
         modifier: String,
         colors: Set<OpenColor>
     ): FileSpec {
+        val propertyName = modifier + filesTypesFactory.createInstanceClassName()
+
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("OpenColors(")
+        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name}${modifier},")
@@ -78,11 +54,14 @@ class ColorCreator : TypeCreator {
 
         codeBlock.addStatement(")")
 
-        val property = PropertySpec.builder("${modifier}OpenDSColors", openColorsClass)
+        val property = PropertySpec.builder(
+            propertyName,
+            filesTypesFactory.createClassName()
+        )
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, "${modifier}OpenDSColors")
+        return FileSpec.builder(PACKAGE, propertyName)
             .addProperty(property)
             .build()
     }
@@ -98,19 +77,19 @@ class ColorCreator : TypeCreator {
 
         val mappedColors = lightColors.map {
             colorsToPropertySpec(
-                "Light",
+                COLOR_INSTANCE_MODIFIER_LIGHT,
                 it
             )
         }
 
         val mappedColorsDark = darkColors.map {
             colorsToPropertySpec(
-                "Dark",
+                COLOR_INSTANCE_MODIFIER_DARK,
                 it
             )
         }
 
-        return FileSpec.builder(PACKAGE, "ColorPallet")
+        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors + mappedColorsDark)
             .build()
     }
@@ -132,10 +111,15 @@ class ColorCreator : TypeCreator {
         val className = ClassName("androidx.compose.ui.graphics", "Color")
 
         return writeThemeAccessor(
-            "OpenColors",
+            filesTypesFactory.openClass(),
             content.colors,
             className
         ).toFileSpec()
+    }
+
+    private companion object {
+        private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
+        private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
     }
 }
 

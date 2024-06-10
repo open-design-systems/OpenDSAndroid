@@ -1,31 +1,27 @@
-package com.opends.processor
+package com.opends.processor.creators
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Shadows
-import com.opends.processor.color.toFileSpec
+import com.opends.processor.PACKAGE
+import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import java.lang.reflect.Type
 
-private const val LOCAL_SHADOW = "LocalOpenDsShadow"
-private const val INSTANCE_CLASS_NAME = "OpenShadowInstance"
-
-class ShadowCreator : TypeCreator {
+class ShadowCreator(
+    private val themePropertyCreator: ThemePropertyCreator,
+    private val filesTypesFactory: FilesTypesFactory,
+) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
             add(
@@ -119,7 +115,7 @@ class ShadowCreator : TypeCreator {
             )
         }
 
-        return FileSpec.builder(PACKAGE, "ShadowPallet")
+        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors)
             .build()
     }
@@ -141,8 +137,7 @@ class ShadowCreator : TypeCreator {
 
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
-                CodeBlock
-                    .builder()
+                CodeBlock.builder()
                     .addStatement("%M(", member)
                     .addStatement("elevation=%L.%M,", pair.second.elevation, dpMember)
                     .addStatement("offset=%L,", offSetInstance)
@@ -164,7 +159,7 @@ class ShadowCreator : TypeCreator {
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("OpenShadow(")
+        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
@@ -172,11 +167,14 @@ class ShadowCreator : TypeCreator {
 
         codeBlock.addStatement(")")
 
-        val property = PropertySpec.builder(INSTANCE_CLASS_NAME, openShadowClass)
+        val property = PropertySpec.builder(
+            filesTypesFactory.createInstanceClassName(),
+            filesTypesFactory.createClassName()
+        )
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, INSTANCE_CLASS_NAME)
+        return FileSpec.builder(PACKAGE, filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -193,30 +191,9 @@ class ShadowCreator : TypeCreator {
         ).toFileSpec()
     }
 
-    @OptIn(DelicateKotlinPoetApi::class)
     override fun createThemeProperty(): Set<PropertySpec> {
-        return buildSet {
-            val colorProperty = PropertySpec.builder("shadow", openShadowClass)
-                .getter(
-                    FunSpec.getterBuilder()
-                        .addAnnotation(Composable::class.java)
-                        .addStatement("return $LOCAL_SHADOW.current")
-                        .build()
-                )
-                .build()
-
-            add(colorProperty)
-            add(createLocalColorStaticComposition())
-        }
-    }
-
-    private fun createLocalColorStaticComposition(): PropertySpec {
-        return PropertySpec.Companion.builder(
-            LOCAL_SHADOW,
-            ProvidableCompositionLocal::class.java.asClassName().parameterizedBy(openShadowClass)
+        return themePropertyCreator.createTheme(
+            creatorFilesName = filesTypesFactory
         )
-            .addModifiers(KModifier.PRIVATE)
-            .initializer("staticCompositionLocalOf { $INSTANCE_CLASS_NAME }")
-            .build()
     }
 }

@@ -1,26 +1,24 @@
-package com.opends.processor
+package com.opends.processor.creators
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Spacing
-import com.opends.processor.color.toFileSpec
+import com.opends.processor.PACKAGE
+import com.opends.processor.openSpaceClass
+import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asClassName
 
 private const val LOCAL_SPACE = "LocalOpenDsSpace"
 private const val INSTANCE_CLASS_NAME = "OpenSpaceInstance"
 
-class SpaceCreator : TypeCreator {
+class SpaceCreator constructor(
+    private val themePropertyCreator: ThemePropertyCreator,
+    private val filesTypesFactory: FilesTypesFactory,
+) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
             add(
@@ -93,31 +91,9 @@ class SpaceCreator : TypeCreator {
         ).toFileSpec()
     }
 
-    @OptIn(DelicateKotlinPoetApi::class)
     override fun createThemeProperty(): Set<PropertySpec> {
-        return buildSet {
-            val colorProperty = PropertySpec
-                .builder("space", openSpaceClass)
-                .getter(
-                    FunSpec.getterBuilder()
-                        .addAnnotation(Composable::class.java)
-                        .addStatement("return ${LOCAL_SPACE}.current")
-                        .build()
-                )
-                .build()
-
-            add(colorProperty)
-            add(createLocalColorStaticComposition())
-        }
-    }
-
-    private fun createLocalColorStaticComposition(): PropertySpec {
-        return PropertySpec.builder(
-            LOCAL_SPACE,
-            ProvidableCompositionLocal::class.java.asClassName().parameterizedBy(openSpaceClass)
+        return themePropertyCreator.createTheme(
+            creatorFilesName = filesTypesFactory
         )
-            .addModifiers(KModifier.PRIVATE)
-            .initializer("staticCompositionLocalOf { $INSTANCE_CLASS_NAME }")
-            .build()
     }
 }
