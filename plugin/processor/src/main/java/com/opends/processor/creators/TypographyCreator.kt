@@ -1,27 +1,19 @@
 package com.opends.processor.creators
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Typography
 import com.opends.processor.PACKAGE
-import com.opends.processor.openTypographyClass
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
-import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asClassName
 
-private const val LOCAL_TYPO = "LocalOpenDsTypography"
-private const val INSTANCE_CLASS_NAME = "OpenTypographyInstance"
-
-class TypographyCreator : TypeCreator {
+class TypographyCreator(
+    private val themePropertyCreator: ThemePropertyCreator,
+    private val filesTypesFactory: FilesTypesFactory,
+) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
             add(
@@ -45,7 +37,7 @@ class TypographyCreator : TypeCreator {
             )
         }
 
-        return FileSpec.builder(PACKAGE, "TypographyPallet")
+        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors)
             .build()
     }
@@ -83,10 +75,6 @@ class TypographyCreator : TypeCreator {
         val textStyle = ClassName("androidx.compose.ui.text", "TextStyle")
         val weight = MemberName("androidx.compose.ui.text.font", "FontWeight")
 
-        when (pair.second.fontWeight) {
-
-        }
-
         return PropertySpec.builder(pair.first, textStyle)
             .initializer(
                 CodeBlock.builder()
@@ -105,7 +93,7 @@ class TypographyCreator : TypeCreator {
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("OpenTypography(")
+        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
@@ -113,11 +101,15 @@ class TypographyCreator : TypeCreator {
 
         codeBlock.addStatement(")")
 
-        val property = PropertySpec.builder(INSTANCE_CLASS_NAME, openTypographyClass)
-            .initializer(codeBlock.build())
-            .build()
+        val property =
+            PropertySpec.builder(
+                filesTypesFactory.createInstanceClassName(),
+                filesTypesFactory.createClassName()
+            )
+                .initializer(codeBlock.build())
+                .build()
 
-        return FileSpec.builder(PACKAGE, INSTANCE_CLASS_NAME)
+        return FileSpec.builder(PACKAGE, filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -128,37 +120,13 @@ class TypographyCreator : TypeCreator {
         val className = ClassName("androidx.compose.ui.text", "TextStyle")
 
         return writeThemeAccessor(
-            "OpenTypography",
+            filesTypesFactory.openClass(),
             content.typography,
             className
         ).toFileSpec()
     }
 
-    @OptIn(DelicateKotlinPoetApi::class)
     override fun createThemeProperty(): Set<PropertySpec> {
-        return buildSet {
-            val colorProperty = PropertySpec.builder("typography", openTypographyClass)
-                .getter(
-                    FunSpec.getterBuilder()
-                        .addAnnotation(Composable::class.java)
-                        .addStatement("return $LOCAL_TYPO.current")
-                        .build()
-                )
-                .build()
-
-            add(colorProperty)
-            add(createLocalColorStaticComposition())
-        }
-    }
-
-    private fun createLocalColorStaticComposition(): PropertySpec {
-        return PropertySpec.Companion.builder(
-            LOCAL_TYPO,
-            ProvidableCompositionLocal::class.java.asClassName()
-                .parameterizedBy(openTypographyClass)
-        )
-            .addModifiers(KModifier.PRIVATE)
-            .initializer("staticCompositionLocalOf { $INSTANCE_CLASS_NAME }")
-            .build()
+        return themePropertyCreator.createTheme(filesTypesFactory)
     }
 }
