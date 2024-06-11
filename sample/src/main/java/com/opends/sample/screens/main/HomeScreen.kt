@@ -11,13 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.opends.sample.NavigationDestinations
 
 @Composable
-fun Button(
+fun HomeScreen(
     modifier: Modifier = Modifier,
-    buttons: List<String> = listOf("Colors", "Spacing", "Typography", "Shadows")
+    navController: NavHostController,
+    buttons: List<Pair<String, NavigationDestinations>> = listOf(
+        "Colors" to NavigationDestinations.ColorScreen
+    )
 ) {
     Column(
         modifier = modifier
@@ -27,10 +33,12 @@ fun Button(
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        for (nameButton in buttons) {
+        buttons.forEach { (nameButton, destination) ->
             Buttons(
                 nameButton = nameButton,
-                onContinuedClicked = {}
+                onContinuedClicked = {
+                    navController.navigate(destination.route)
+                }
             )
         }
     }
@@ -54,6 +62,6 @@ fun Buttons(
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
-fun ButtonPreview() {
-    Button()
+fun HomeScreenPreview() {
+    HomeScreen(navController = NavHostController(LocalContext.current))
 }
