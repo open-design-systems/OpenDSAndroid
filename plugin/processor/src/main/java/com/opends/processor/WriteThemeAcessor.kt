@@ -15,7 +15,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 
-private const val GET_TOKENS_FUNCTION = "gettokens"
+private const val GET_TOKENS_FUNCTION = "getTokens"
 
 fun writeThemeAccessor(
     name: String,
