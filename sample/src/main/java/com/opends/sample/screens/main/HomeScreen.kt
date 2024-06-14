@@ -22,7 +22,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     buttons: List<Pair<String, NavigationDestinations>> = listOf(
-        "Colors" to NavigationDestinations.ColorScreen
+        "Colors" to NavigationDestinations.ColorScreen,
+        "Spacing" to NavigationDestinations.SpacingScreen
     )
 ) {
     Column(
@@ -62,6 +63,6 @@ fun Buttons(
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     HomeScreen(navController = NavHostController(LocalContext.current))
 }
