@@ -17,7 +17,6 @@ class OpenDesignSystemPlugin : Plugin<Project> {
         val extension = target.extensions.create<OpenDesignSystemPluginExtension>(EXTENSION_NAME)
 
         target.afterEvaluate {
-
             val loadedFileLocation = extension.themeLocation
 
             with(extensions.getByType<AppExtension>()) {
