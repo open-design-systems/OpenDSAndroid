@@ -1,4 +1,4 @@
-package com.opends.sample
+package com.opends.sample.theme
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -19,7 +19,8 @@ fun SampleTheme(content: @Composable () -> Unit) {
     val newColors = MaterialTheme.colorScheme.copy(
         primary = colors.primary,
         secondary = colors.secondary,
-        background = colors.background
+        background = colors.background,
+        surface = colors.background
     )
 
     val typography = MaterialTheme.typography.copy(

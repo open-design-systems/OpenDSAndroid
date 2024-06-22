@@ -7,31 +7,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.opends.sample.theme.ProjectPreview
+import com.opends.sample.theme.SampleTheme
 
 @Composable
 fun Button(
     modifier: Modifier = Modifier,
     buttons: List<String> = listOf("Colors", "Spacing", "Typography", "Shadows")
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(horizontal = 70.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Surface {
+        Column(
+            modifier = modifier
+                .fillMaxHeight()
+                .padding(horizontal = 70.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
-        for (nameButton in buttons) {
-            Buttons(
-                nameButton = nameButton,
-                onContinuedClicked = {}
-            )
+            ) {
+            for (nameButton in buttons) {
+                Buttons(
+                    nameButton = nameButton,
+                    onContinuedClicked = {}
+                )
+            }
         }
     }
 }
@@ -52,8 +56,10 @@ fun Buttons(
     }
 }
 
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@ProjectPreview
 @Composable
 fun ButtonPreview() {
-    Button()
+    SampleTheme {
+        Button()
+    }
 }
