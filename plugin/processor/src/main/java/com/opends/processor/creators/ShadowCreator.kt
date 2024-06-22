@@ -42,7 +42,6 @@ class ShadowCreator(
             .addModifiers(KModifier.DATA)
         private val constructor = FunSpec.constructorBuilder()
 
-
         fun build() = typeSpec
             .primaryConstructor(constructor.build())
             .build()

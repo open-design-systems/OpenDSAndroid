@@ -2,5 +2,5 @@ package com.open.design.system
 
 interface OpenType {
 
-    val meta : MetaInformation
+    val meta: MetaInformation
 }

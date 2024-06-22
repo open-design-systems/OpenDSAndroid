@@ -6,7 +6,7 @@ plugins {
 }
 
 openDS {
-    themeLocation = "${projectDir}/theme/sample.json"
+    themeLocation = "$projectDir/theme/sample.json"
 }
 
 android {
@@ -28,7 +28,7 @@ android {
     }
 
     composeOptions {
-        //kotlinCompilerExtensionVersion = "1.5.13"
+        // kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     buildTypes {

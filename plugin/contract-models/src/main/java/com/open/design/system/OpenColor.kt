@@ -7,7 +7,7 @@ data class OpenColor(
     override val meta: MetaInformation,
     val light: ColorData,
     val dark: ColorData
-): OpenType
+) : OpenType
 
 @Serializable
 data class ColorData(

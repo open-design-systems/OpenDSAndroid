@@ -12,10 +12,9 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 
-private const val LOCAL_SPACE = "LocalOpenDsSpace"
 private const val INSTANCE_CLASS_NAME = "OpenSpaceInstance"
 
-class SpaceCreator constructor(
+class SpaceCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
 ) : TypeCreator {

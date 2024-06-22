@@ -42,5 +42,8 @@ jobs:
           java-version: 17
           distribution: adopt
 
+      - name: Detekt
+        run: make linters/detekt
+
       - name: Build app
         run: ./gradlew assembleDebug

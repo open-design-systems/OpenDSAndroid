@@ -10,7 +10,7 @@ data class Shadows(
     val shadowOpacity: Float,
     val shadowOffset: ShadowOffset,
     val shadowRadius: Float
-): OpenType
+) : OpenType
 
 @Serializable
 data class ShadowOffset(
