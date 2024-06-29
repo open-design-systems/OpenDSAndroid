@@ -20,9 +20,9 @@ class TypographyCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.typography))
+            add(createColorPallet(content.typography.values.toSet()))
 
-            add(writeSpacingInstance(content.typography))
+            add(writeSpacingInstance(content.typography.values.toSet()))
         }
     }
 
@@ -122,7 +122,7 @@ class TypographyCreator(
 
         return writeThemeAccessor(
             filesTypesFactory.openClass(),
-            content.typography,
+            content.typography.values.toSet(),
             className
         ).toFileSpec()
     }

@@ -2,7 +2,6 @@ package com.opends.processor
 
 import androidx.compose.runtime.Composable
 import com.open.design.system.OpenDesignSystem
-import com.open.design.system.OpenDesignSystemResponse
 import com.opends.processor.creators.ColorCreator
 import com.opends.processor.creators.CreatorFilesName
 import com.opends.processor.creators.FilesTypesFactory
@@ -41,11 +40,11 @@ fun processFile(
     input: String,
     output: File
 ) {
-    Json {
+    val jsonBuilder = Json {
         ignoreUnknownKeys = true
     }
 
-    val decoded = Json.decodeFromString<OpenDesignSystemResponse>(input)
+    val decoded = jsonBuilder.decodeFromString<OpenDesignSystem>(input)
 
     val listOfFiles = mutableListOf<FileSpec>()
     val themeProperties = mutableSetOf<PropertySpec>()
@@ -74,7 +73,7 @@ fun processFile(
 
     creators.forEach {
         listOfFiles.addAll(
-            it.createFiles(decoded.defaultValues)
+            it.createFiles(decoded)
         )
 
         themeProperties.addAll(it.createThemeProperty())
