@@ -165,36 +165,7 @@
             "backgroundColor": "colors.background"
         }
     },
-    "shadows": {
-        "elevation1": {
-            "meta": {
-                "id": "shadows.elevation1",
-                "name": "elevation1",
-                "description": ""
-            },
-            "shadowColor": "colors.primary",
-            "shadowOpacity": 0.1,
-            "shadowOffset": {
-                "width": 0,
-                "height": 1
-            },
-            "shadowRadius": 1
-        },
-        "elevation2": {
-            "meta": {
-                "id": "shadows.elevation2",
-                "name": "elevation2",
-                "description": ""
-            },
-            "shadowColor": "colors.primary",
-            "shadowOpacity": 0.2,
-            "shadowOffset": {
-                "width": 0,
-                "height": 2
-            },
-            "shadowRadius": 2
-        }
-    },
+    "shadows": {},
     "primitives": {
         "primary": {
             "meta": {
