@@ -23,10 +23,11 @@ class ColorCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.colors))
+            val colors = content.colors.values.toSet()
+            add(createColorPallet(colors))
 
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, content.colors))
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, colors))
         }
     }
 
@@ -111,7 +112,7 @@ class ColorCreator(
 
         return writeThemeAccessor(
             filesTypesFactory.openClass(),
-            content.colors,
+            content.colors.values.toSet(),
             className
         ).toFileSpec()
     }

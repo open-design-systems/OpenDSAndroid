@@ -28,11 +28,11 @@ class ShadowCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.shadows))
+            add(createColorPallet(content.shadows.values.toSet()))
 
             add(createShadowType())
 
-            add(writeSpacingInstance(content.shadows))
+            add(writeSpacingInstance(content.shadows.values.toSet()))
         }
     }
 
@@ -185,7 +185,7 @@ class ShadowCreator(
 
         return writeThemeAccessor(
             "OpenShadow",
-            content.shadows,
+            content.shadows.values.toSet(),
             className
         ).toFileSpec()
     }

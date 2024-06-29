@@ -24,9 +24,9 @@ class SpaceCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.spacing))
+            add(createColorPallet(content.spacing.values.toSet()))
 
-            add(writeSpacingInstance(content.spacing))
+            add(writeSpacingInstance(content.spacing.values.toSet()))
         }
     }
 
@@ -85,7 +85,7 @@ class SpaceCreator(
 
         return writeThemeAccessor(
             "OpenSpace",
-            content.spacing,
+            content.spacing.values.toSet(),
             className
         ).toFileSpec()
     }
