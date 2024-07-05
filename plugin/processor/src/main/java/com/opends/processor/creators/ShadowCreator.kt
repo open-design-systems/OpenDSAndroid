@@ -28,11 +28,11 @@ class ShadowCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.shadows))
+            add(createColorPallet(content.shadows.values.toSet()))
 
             add(createShadowType())
 
-            add(writeSpacingInstance(content.shadows))
+            add(writeSpacingInstance(content.shadows.values.toSet()))
         }
     }
 
@@ -41,7 +41,6 @@ class ShadowCreator(
         private val typeSpec: TypeSpec.Builder = TypeSpec.classBuilder(name)
             .addModifiers(KModifier.DATA)
         private val constructor = FunSpec.constructorBuilder()
-
 
         fun build() = typeSpec
             .primaryConstructor(constructor.build())
@@ -186,7 +185,7 @@ class ShadowCreator(
 
         return writeThemeAccessor(
             "OpenShadow",
-            content.shadows,
+            content.shadows.values.toSet(),
             className
         ).toFileSpec()
     }

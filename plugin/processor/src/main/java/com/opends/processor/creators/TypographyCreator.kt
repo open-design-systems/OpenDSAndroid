@@ -20,9 +20,9 @@ class TypographyCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.typography))
+            add(createColorPallet(content.typography.values.toSet()))
 
-            add(writeSpacingInstance(content.typography))
+            add(writeSpacingInstance(content.typography.values.toSet()))
         }
     }
 
@@ -55,6 +55,7 @@ class TypographyCreator(
      *     { label: "Black", value: 900 },
      * ];
      */
+    @Suppress("MagicNumber")
     private fun Int.toWeight() = when (this) {
         100 -> "Thin"
         200 -> "ExtraLight"
@@ -65,7 +66,7 @@ class TypographyCreator(
         700 -> "Bold"
         800 -> "ExtraBold"
         900 -> "Black"
-        else -> throw Exception("Invalid weight for font")
+        else -> throw IllegalArgumentException("Invalid weight for font")
     }
 
     private fun colorsToPropertySpec(
@@ -121,7 +122,7 @@ class TypographyCreator(
 
         return writeThemeAccessor(
             filesTypesFactory.openClass(),
-            content.typography,
+            content.typography.values.toSet(),
             className
         ).toFileSpec()
     }

@@ -44,8 +44,6 @@ fun writeThemeAccessor(
         ).build()
     }
 
-
-
     return TypeSpec.classBuilder(name)
         .addProperties(mapped)
         .addAnnotation(Stable::class)
@@ -66,7 +64,6 @@ private fun createFunctionToRetrieveTokens(
 
     codeBlock.add("return listOf(")
     for (item in content.map { it.meta.name }) {
-
         codeBlock.addStatement("%S to $item,", item)
     }
     codeBlock.add(")")
@@ -80,7 +77,6 @@ private fun createFunctionToRetrieveTokens(
 
     val returnType = LIST
         .parameterizedBy(pairType)
-
 
     val getTokens = FunSpec.builder(GET_TOKENS_FUNCTION)
         .addModifiers(KModifier.INTERNAL)

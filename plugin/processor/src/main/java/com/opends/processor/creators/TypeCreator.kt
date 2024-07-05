@@ -8,5 +8,5 @@ interface TypeCreator {
 
     fun createFiles(content: OpenDesignSystem): Set<FileSpec>
 
-    fun createThemeProperty() : Set<PropertySpec>
+    fun createThemeProperty(): Set<PropertySpec>
 }

@@ -12,7 +12,6 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
-
 class ColorCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
@@ -24,10 +23,11 @@ class ColorCreator(
                 createFileAccessors(content)
             )
 
-            add(createColorPallet(content.colors))
+            val colors = content.colors.values.toSet()
+            add(createColorPallet(colors))
 
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, content.colors))
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, content.colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, colors))
+            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, colors))
         }
     }
 
@@ -49,7 +49,7 @@ class ColorCreator(
         codeBlock.addStatement("${filesTypesFactory.openClass()}(")
 
         colors.forEach {
-            codeBlock.addStatement("${it.meta.name}=${it.meta.name}${modifier},")
+            codeBlock.addStatement("${it.meta.name}=${it.meta.name}$modifier,")
         }
 
         codeBlock.addStatement(")")
@@ -98,7 +98,7 @@ class ColorCreator(
         type: String,
         pair: Pair<String, ColorData>
     ): PropertySpec {
-        val alpha = pair.second.rgba.alpha.toString(16)
+        val alpha = pair.second.rgba.alpha.toString(STRING_HEX_RADIX)
 
         return PropertySpec.builder("${pair.first}$type", Color::class.java)
             .initializer("Color(0x$alpha${pair.second.hex.removePrefix("#")})")
@@ -112,7 +112,7 @@ class ColorCreator(
 
         return writeThemeAccessor(
             filesTypesFactory.openClass(),
-            content.colors,
+            content.colors.values.toSet(),
             className
         ).toFileSpec()
     }
@@ -120,6 +120,7 @@ class ColorCreator(
     private companion object {
         private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
         private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
+        private const val STRING_HEX_RADIX = 16
     }
 }
 
