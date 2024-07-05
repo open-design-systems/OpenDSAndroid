@@ -22,8 +22,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     buttons: List<Pair<String, NavigationDestinations>> = listOf(
-        "Colors" to NavigationDestinations.ColorScreen,
-        "Spacing" to NavigationDestinations.SpacingScreen
+        "Colors" to NavigationDestinations.ColorScreen
     )
 ) {
     Column(
