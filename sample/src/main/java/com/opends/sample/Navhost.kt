@@ -5,7 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.opends.sample.screens.main.Button
+import com.opends.sample.screens.main.ColorScreen
+import com.opends.sample.screens.main.HomeScreen
 
 @Composable
 internal fun AppNavHost(
@@ -21,7 +22,12 @@ internal fun AppNavHost(
         composable(
             route = NavigationDestinations.Start.route
         ) {
-            Button()
+            HomeScreen(navController = navController)
+        }
+        composable(
+            route = NavigationDestinations.ColorScreen.route
+        ) {
+           ColorScreen()
         }
     }
 }
