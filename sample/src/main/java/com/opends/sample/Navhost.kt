@@ -2,7 +2,6 @@ package com.opends.sample
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +26,7 @@ internal fun AppNavHost(
         }
         composable(
             route = NavigationDestinations.ColorScreen.route
-        ){
+        ) {
            ColorScreen()
         }
     }
