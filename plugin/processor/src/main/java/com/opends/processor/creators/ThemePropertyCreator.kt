@@ -2,6 +2,7 @@ package com.opends.processor.creators
 
 import androidx.compose.runtime.Composable
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import java.util.Locale
 
@@ -28,10 +29,14 @@ class ThemePropertyCreator(
                 .build()
 
             add(colorProperty)
+            val instanceMemberName = MemberName(
+                creatorFilesName.getPackage(),
+                namePrefix + creatorFilesName.createInstanceClassName()
+            )
             add(
                 staticComposition.create(
                     creatorFilesName.createStaticCompositionName(),
-                    namePrefix + creatorFilesName.createInstanceClassName(),
+                    instanceMemberName,
                     creatorFilesName.createClassName()
                 )
             )

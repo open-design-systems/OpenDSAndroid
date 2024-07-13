@@ -5,7 +5,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Shadows
-import com.opends.processor.PACKAGE
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -94,11 +93,11 @@ class ShadowCreator(
             .addProperty("shadowColor", Color::class.java)
             .addProperty("opacity", Float::class.java)
             .addProperty("radius", Float::class.java)
-            .addProperty("offset", ClassName(PACKAGE, "ShadowOffset"))
+            .addProperty("offset", ClassName(filesTypesFactory.getPackage(), "ShadowOffset"))
             .addAnnotation(Immutable::class.java)
             .build()
 
-        return FileSpec.builder(PACKAGE, "ShadowType")
+        return FileSpec.builder(filesTypesFactory.getPackage(), "ShadowType")
             .addTypes(listOf(shadowOffsetType, shadowType))
             .build()
     }
@@ -114,7 +113,7 @@ class ShadowCreator(
             )
         }
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors)
             .build()
     }
@@ -123,8 +122,8 @@ class ShadowCreator(
         pair: Pair<String, Shadows>
     ): PropertySpec {
         val memberColor = MemberName("androidx.compose.ui.graphics", "Color")
-        val shadowTypeClass = ClassName(PACKAGE, "ShadowType")
-        val member = MemberName(PACKAGE, "ShadowType")
+        val shadowTypeClass = ClassName(filesTypesFactory.getPackage(), "ShadowType")
+        val member = MemberName(filesTypesFactory.getPackage(), "ShadowType")
         val dpMember = MemberName("androidx.compose.ui.unit", "dp")
 
         val offSetInstance = CodeBlock.builder()
@@ -158,7 +157,8 @@ class ShadowCreator(
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
+        val member = MemberName(filesTypesFactory.getPackage(), filesTypesFactory.openClass())
+        codeBlock.addStatement("%M(", member)
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
@@ -173,7 +173,7 @@ class ShadowCreator(
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.createInstanceClassName())
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -181,13 +181,13 @@ class ShadowCreator(
     private fun createFileAccessors(
         content: OpenDesignSystem
     ): FileSpec {
-        val className = ClassName(PACKAGE, "ShadowType")
+        val className = ClassName(filesTypesFactory.getPackage(), "ShadowType")
 
         return writeThemeAccessor(
             "OpenShadow",
             content.shadows.values.toSet(),
             className
-        ).toFileSpec()
+        ).toFileSpec(filesTypesFactory)
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {

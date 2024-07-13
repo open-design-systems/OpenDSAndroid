@@ -4,11 +4,11 @@ import androidx.compose.ui.graphics.Color
 import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
-import com.opends.processor.PACKAGE
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 
@@ -46,7 +46,8 @@ class ColorCreator(
 
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
+        val member = MemberName(filesTypesFactory.getPackage(), filesTypesFactory.openClass())
+        codeBlock.addStatement("%M(", member)
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name}$modifier,")
@@ -61,7 +62,7 @@ class ColorCreator(
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, propertyName)
+        return FileSpec.builder(filesTypesFactory.getPackage(), propertyName)
             .addProperty(property)
             .build()
     }
@@ -89,7 +90,7 @@ class ColorCreator(
             )
         }
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors + mappedColorsDark)
             .build()
     }
@@ -114,7 +115,7 @@ class ColorCreator(
             filesTypesFactory.openClass(),
             content.colors.values.toSet(),
             className
-        ).toFileSpec()
+        ).toFileSpec(filesTypesFactory)
     }
 
     private companion object {
@@ -124,9 +125,9 @@ class ColorCreator(
     }
 }
 
-fun TypeSpec.toFileSpec(): FileSpec {
+fun TypeSpec.toFileSpec(filesTypesFactory: FilesTypesFactory): FileSpec {
     return FileSpec
-        .builder(PACKAGE, this.name!!)
+        .builder(filesTypesFactory.getPackage(), this.name!!)
         .addImport(
             "androidx.compose.runtime",
             "getValue",

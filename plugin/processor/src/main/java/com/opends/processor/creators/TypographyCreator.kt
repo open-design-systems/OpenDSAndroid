@@ -2,7 +2,6 @@ package com.opends.processor.creators
 
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Typography
-import com.opends.processor.PACKAGE
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -37,7 +36,7 @@ class TypographyCreator(
             )
         }
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
             .addProperties(mappedColors)
             .build()
     }
@@ -94,7 +93,8 @@ class TypographyCreator(
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("${filesTypesFactory.openClass()}(")
+        val member = MemberName(filesTypesFactory.getPackage(), filesTypesFactory.openClass())
+        codeBlock.addStatement("%M(", member)
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
@@ -110,7 +110,7 @@ class TypographyCreator(
                 .initializer(codeBlock.build())
                 .build()
 
-        return FileSpec.builder(PACKAGE, filesTypesFactory.createInstanceClassName())
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -124,7 +124,7 @@ class TypographyCreator(
             filesTypesFactory.openClass(),
             content.typography.values.toSet(),
             className
-        ).toFileSpec()
+        ).toFileSpec(filesTypesFactory)
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {

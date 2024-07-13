@@ -15,7 +15,13 @@ class FilesTypesFactory(
 
     fun createStaticCompositionName() = "LocalOpenDs$typeName"
 
-    fun createClassName(): ClassName = ClassName(PACKAGE, openClass())
+    fun createClassName(): ClassName = ClassName(getPackage(), openClass())
     fun baseName() = typeName
     fun openClass(): String = "Open$typeName"
+
+    fun getPackage(): String {
+        val typeInCameCase = typeName.replaceFirstChar { it.lowercaseChar() }
+
+        return "$PACKAGE.$typeInCameCase"
+    }
 }
