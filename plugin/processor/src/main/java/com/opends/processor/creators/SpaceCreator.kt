@@ -3,16 +3,12 @@ package com.opends.processor.creators
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Spacing
-import com.opends.processor.PACKAGE
-import com.opends.processor.openSpaceClass
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
-
-private const val INSTANCE_CLASS_NAME = "OpenSpaceInstance"
 
 class SpaceCreator(
     private val themePropertyCreator: ThemePropertyCreator,
@@ -41,7 +37,7 @@ class SpaceCreator(
             )
         }
 
-        return FileSpec.builder(PACKAGE, "SpacePallet")
+        return FileSpec.builder(filesTypesFactory.getPackage(), "SpacePallet")
             .addProperties(mappedColors)
             .build()
     }
@@ -61,7 +57,8 @@ class SpaceCreator(
     ): FileSpec {
         val codeBlock = CodeBlock.builder()
 
-        codeBlock.addStatement("OpenSpace(")
+        val member = MemberName(filesTypesFactory.getPackage(), filesTypesFactory.openClass())
+        codeBlock.addStatement("%M(", member)
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name},")
@@ -69,11 +66,14 @@ class SpaceCreator(
 
         codeBlock.addStatement(")")
 
-        val property = PropertySpec.builder(INSTANCE_CLASS_NAME, openSpaceClass)
+        val property = PropertySpec.builder(
+            filesTypesFactory.createInstanceClassName(),
+            filesTypesFactory.createClassName()
+        )
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(PACKAGE, INSTANCE_CLASS_NAME)
+        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.createInstanceClassName())
             .addProperty(property)
             .build()
     }
@@ -87,7 +87,7 @@ class SpaceCreator(
             "OpenSpace",
             content.spacing.values.toSet(),
             className
-        ).toFileSpec()
+        ).toFileSpec(filesTypesFactory)
     }
 
     override fun createThemeProperty(): Set<PropertySpec> {

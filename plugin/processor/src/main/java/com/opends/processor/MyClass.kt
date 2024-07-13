@@ -29,7 +29,7 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 
-const val PACKAGE = "com.open.design.system"
+const val PACKAGE = "com.opends"
 
 val openColorsClass = ClassName(PACKAGE, "OpenColors")
 val openSpaceClass = ClassName(PACKAGE, "OpenSpace")

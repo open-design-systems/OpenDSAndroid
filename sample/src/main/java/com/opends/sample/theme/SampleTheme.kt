@@ -4,9 +4,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.open.design.system.DarkOpenColorInstance
-import com.open.design.system.LightOpenColorInstance
-import com.open.design.system.OpenTypographyInstance
+import com.opends.color.DarkOpenColorInstance
+import com.opends.color.LightOpenColorInstance
+import com.opends.typography.OpenTypographyInstance
 
 @Composable
 fun SampleTheme(content: @Composable () -> Unit) {
