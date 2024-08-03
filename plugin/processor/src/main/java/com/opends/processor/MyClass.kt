@@ -11,7 +11,6 @@ import com.opends.processor.creators.StaticCompositionCreator
 import com.opends.processor.creators.ThemePropertyCreator
 import com.opends.processor.creators.TypographyCreator
 import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
@@ -30,11 +29,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 const val PACKAGE = "com.opends"
-
-val openColorsClass = ClassName(PACKAGE, "OpenColors")
-val openSpaceClass = ClassName(PACKAGE, "OpenSpace")
-val openTypographyClass = ClassName(PACKAGE, "OpenTypography")
-val openShadowClass = ClassName(PACKAGE, "OpenShadow")
 
 fun processFile(
     input: String,
