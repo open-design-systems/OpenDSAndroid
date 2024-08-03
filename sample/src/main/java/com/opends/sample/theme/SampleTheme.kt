@@ -24,8 +24,8 @@ fun SampleTheme(content: @Composable () -> Unit) {
     )
 
     val typography = MaterialTheme.typography.copy(
-        bodyMedium = OpenTypographyInstance.body,
-        headlineMedium = OpenTypographyInstance.heading
+        bodyMedium = OpenTypographyInstance.bodyMedium,
+        headlineMedium = OpenTypographyInstance.headlineMedium
     )
 
     MaterialTheme(

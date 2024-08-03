@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Shadows(
     override val meta: MetaInformation,
     val elevation: Float,
-    val shadowColor: String,
+    val shadowColor: RefInformation,
     val shadowOpacity: Float,
     val shadowOffset: ShadowOffset,
     val shadowRadius: Float

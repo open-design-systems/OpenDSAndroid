@@ -142,9 +142,9 @@ class ShadowCreator(
                     .addStatement("opacity=%Lf,", pair.second.shadowOpacity)
                     .addStatement("radius=%Lf,", pair.second.shadowRadius)
                     .addStatement(
-                        "shadowColor=%M(0xff%L)",
+                        "shadowColor=%M(0x%L)",
                         memberColor,
-                        pair.second.shadowColor.removePrefix("#")
+                        "ffffff"
                     )
                     .addStatement(")")
                     .build()

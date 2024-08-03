@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 data class Typography(
     override val meta: MetaInformation,
     val fontFamily: String,
-    val fontSize: String,
+    val fontSize: Int,
     val fontWeight: Int,
-    val lineHeight: String,
+    val lineHeight: Int,
     val letterSpacing: Float
 ) : OpenType
