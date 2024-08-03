@@ -6,7 +6,7 @@ plugins {
 }
 
 openDS {
-    themeLocation = "$projectDir/theme/sample.json"
+    themeLocation = "$projectDir/theme/open-design-system.json"
 }
 
 android {
