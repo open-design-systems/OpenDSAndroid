@@ -99,7 +99,8 @@ class ColorCreator(
         type: String,
         pair: Pair<String, ColorData>
     ): PropertySpec {
-        val alpha = pair.second.rgba.alpha.toString(STRING_HEX_RADIX)
+        val alphaToColorRange = pair.second.rgba.alpha * 255
+        val alpha = alphaToColorRange.toString(STRING_HEX_RADIX)
 
         return PropertySpec.builder("${pair.first}$type", Color::class.java)
             .initializer("Color(0x$alpha${pair.second.hex.removePrefix("#")})")
