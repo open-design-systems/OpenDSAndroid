@@ -2,6 +2,7 @@ package com.opends.processor
 
 import androidx.compose.runtime.Composable
 import com.open.design.system.OpenDesignSystem
+import com.open.design.system.RefType
 import com.opends.processor.creators.ColorCreator
 import com.opends.processor.creators.CreatorFilesName
 import com.opends.processor.creators.FilesTypesFactory
@@ -28,6 +29,8 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Paths
 
+typealias TokenMap = MutableMap<RefType, MutableMap<String, String>>
+
 const val PACKAGE = "com.opends"
 
 fun processFile(
@@ -46,10 +49,14 @@ fun processFile(
     val themePropertyCreator = ThemePropertyCreator(
         staticComposition = StaticCompositionCreator()
     )
+
+    val tokensMap: TokenMap = mutableMapOf()
+
     val creators = setOf(
         ColorCreator(
             themePropertyCreator = themePropertyCreator,
             filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ColorNames()),
+            tokensMap = tokensMap
         ),
         SpaceCreator(
             themePropertyCreator = themePropertyCreator,
@@ -62,6 +69,7 @@ fun processFile(
         ShadowCreator(
             themePropertyCreator = themePropertyCreator,
             filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ShadowNames()),
+            tokensMap = tokensMap
         )
     )
 

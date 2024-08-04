@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Shadows
+import com.opends.processor.TokenMap
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -20,6 +21,7 @@ import java.lang.reflect.Type
 class ShadowCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val tokensMap: TokenMap,
 ) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -90,7 +92,8 @@ class ShadowCreator(
 
         val shadowType = DataClassSpecBuilder("ShadowType")
             .addProperty("elevation", Dp::class.java)
-            .addProperty("shadowColor", Color::class.java)
+            .addProperty("shadowColorLight", Color::class.java)
+            .addProperty("shadowColorDark", Color::class.java)
             .addProperty("opacity", Float::class.java)
             .addProperty("radius", Float::class.java)
             .addProperty("offset", ClassName(filesTypesFactory.getPackage(), "ShadowOffset"))
@@ -133,6 +136,19 @@ class ShadowCreator(
             .add(")")
             .build()
 
+        val shadowColorRef = pair.second.shadowColor.ref.split(".").last()
+        val colorLocation = "com.opends.color."
+
+
+        val codeBlockShadowColor = CodeBlock.builder()
+            .beginControlFlow("if (true)")
+            .add("%L", colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_LIGHT)
+            .nextControlFlow("else")
+            .add("%L", colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_DARK)
+            .endControlFlow()
+            .build()
+
+
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
                 CodeBlock.builder()
@@ -142,9 +158,12 @@ class ShadowCreator(
                     .addStatement("opacity=%Lf,", pair.second.shadowOpacity)
                     .addStatement("radius=%Lf,", pair.second.shadowRadius)
                     .addStatement(
-                        "shadowColor=%M(0x%L)",
-                        memberColor,
-                        "ffffff"
+                        "shadowColorLight=%L,",
+                        colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_LIGHT
+                    )
+                    .addStatement(
+                        "shadowColorDark=%L",
+                        colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_DARK
                     )
                     .addStatement(")")
                     .build()
@@ -194,5 +213,10 @@ class ShadowCreator(
         return themePropertyCreator.createTheme(
             creatorFilesName = filesTypesFactory
         )
+    }
+
+    companion object {
+        private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
+        private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
     }
 }

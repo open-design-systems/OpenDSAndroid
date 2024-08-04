@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
+import com.open.design.system.RefType
+import com.opends.processor.TokenMap
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -15,6 +17,7 @@ import com.squareup.kotlinpoet.TypeSpec
 class ColorCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val tokensMap: TokenMap,
 ) : TypeCreator {
 
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
@@ -38,6 +41,16 @@ class ColorCreator(
         )
     }
 
+    private fun setColorInColorRefMap(
+        openColor: OpenColor,
+        value: String,
+        modifier: String
+    ) {
+        tokensMap.getOrPut(RefType.colors) {
+            mutableMapOf()
+        }[openColor.meta.name+modifier] = value
+    }
+
     private fun writeColorInstance(
         modifier: String,
         colors: Set<OpenColor>
@@ -51,6 +64,11 @@ class ColorCreator(
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name}$modifier,")
+            setColorInColorRefMap(
+                it,
+                "${it.meta.name}$modifier",
+                modifier
+            )
         }
 
         codeBlock.addStatement(")")
