@@ -4,8 +4,6 @@ import androidx.compose.ui.graphics.Color
 import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
 import com.open.design.system.OpenDesignSystem
-import com.open.design.system.RefType
-import com.opends.processor.TokenMap
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -17,7 +15,6 @@ import com.squareup.kotlinpoet.TypeSpec
 class ColorCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
-    private val tokensMap: TokenMap,
 ) : TypeCreator {
 
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
@@ -41,16 +38,6 @@ class ColorCreator(
         )
     }
 
-    private fun setColorInColorRefMap(
-        openColor: OpenColor,
-        value: String,
-        modifier: String
-    ) {
-        tokensMap.getOrPut(RefType.colors) {
-            mutableMapOf()
-        }[openColor.meta.name+modifier] = value
-    }
-
     private fun writeColorInstance(
         modifier: String,
         colors: Set<OpenColor>
@@ -64,11 +51,6 @@ class ColorCreator(
 
         colors.forEach {
             codeBlock.addStatement("${it.meta.name}=${it.meta.name}$modifier,")
-            setColorInColorRefMap(
-                it,
-                "${it.meta.name}$modifier",
-                modifier
-            )
         }
 
         codeBlock.addStatement(")")
@@ -108,7 +90,10 @@ class ColorCreator(
             )
         }
 
-        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(
+            filesTypesFactory.getPackage(),
+            filesTypesFactory.getPalletFileName()
+        )
             .addProperties(mappedColors + mappedColorsDark)
             .build()
     }
@@ -117,7 +102,7 @@ class ColorCreator(
         type: String,
         pair: Pair<String, ColorData>
     ): PropertySpec {
-        val alphaToColorRange = pair.second.rgba.alpha * 255
+        val alphaToColorRange = pair.second.rgba.alpha * MAX_INT_COLOR_RANGE_CONVERTER
         val alpha = alphaToColorRange.toString(STRING_HEX_RADIX)
 
         return PropertySpec.builder("${pair.first}$type", Color::class.java)
@@ -141,6 +126,7 @@ class ColorCreator(
         private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
         private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
         private const val STRING_HEX_RADIX = 16
+        private const val MAX_INT_COLOR_RANGE_CONVERTER = 255
     }
 }
 

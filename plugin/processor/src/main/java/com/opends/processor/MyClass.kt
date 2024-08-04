@@ -50,13 +50,10 @@ fun processFile(
         staticComposition = StaticCompositionCreator()
     )
 
-    val tokensMap: TokenMap = mutableMapOf()
-
     val creators = setOf(
         ColorCreator(
             themePropertyCreator = themePropertyCreator,
             filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ColorNames()),
-            tokensMap = tokensMap
         ),
         SpaceCreator(
             themePropertyCreator = themePropertyCreator,
@@ -69,7 +66,6 @@ fun processFile(
         ShadowCreator(
             themePropertyCreator = themePropertyCreator,
             filesTypesFactory = FilesTypesFactory(filesName = CreatorFilesName.ShadowNames()),
-            tokensMap = tokensMap
         )
     )
 

@@ -5,7 +5,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.open.design.system.OpenDesignSystem
 import com.open.design.system.Shadows
-import com.opends.processor.TokenMap
 import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
@@ -21,7 +20,6 @@ import java.lang.reflect.Type
 class ShadowCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
-    private val tokensMap: TokenMap,
 ) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -116,7 +114,10 @@ class ShadowCreator(
             )
         }
 
-        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(
+            filesTypesFactory.getPackage(),
+            filesTypesFactory.getPalletFileName()
+        )
             .addProperties(mappedColors)
             .build()
     }
@@ -124,7 +125,6 @@ class ShadowCreator(
     private fun colorsToPropertySpec(
         pair: Pair<String, Shadows>
     ): PropertySpec {
-        val memberColor = MemberName("androidx.compose.ui.graphics", "Color")
         val shadowTypeClass = ClassName(filesTypesFactory.getPackage(), "ShadowType")
         val member = MemberName(filesTypesFactory.getPackage(), "ShadowType")
         val dpMember = MemberName("androidx.compose.ui.unit", "dp")
@@ -139,16 +139,6 @@ class ShadowCreator(
         val shadowColorRef = pair.second.shadowColor.ref.split(".").last()
         val colorLocation = "com.opends.color."
 
-
-        val codeBlockShadowColor = CodeBlock.builder()
-            .beginControlFlow("if (true)")
-            .add("%L", colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_LIGHT)
-            .nextControlFlow("else")
-            .add("%L", colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_DARK)
-            .endControlFlow()
-            .build()
-
-
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
                 CodeBlock.builder()
@@ -159,11 +149,11 @@ class ShadowCreator(
                     .addStatement("radius=%Lf,", pair.second.shadowRadius)
                     .addStatement(
                         "shadowColorLight=%L,",
-                        colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_LIGHT
+                        colorLocation + shadowColorRef + COLOR_INSTANCE_MODIFIER_LIGHT
                     )
                     .addStatement(
                         "shadowColorDark=%L",
-                        colorLocation+shadowColorRef+COLOR_INSTANCE_MODIFIER_DARK
+                        colorLocation + shadowColorRef + COLOR_INSTANCE_MODIFIER_DARK
                     )
                     .addStatement(")")
                     .build()
@@ -192,7 +182,10 @@ class ShadowCreator(
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.createInstanceClassName())
+        return FileSpec.builder(
+            filesTypesFactory.getPackage(),
+            filesTypesFactory.createInstanceClassName()
+        )
             .addProperty(property)
             .build()
     }

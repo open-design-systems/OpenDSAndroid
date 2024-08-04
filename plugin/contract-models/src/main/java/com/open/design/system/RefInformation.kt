@@ -6,9 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RefInformation(
     @SerialName("\$ref") val ref: String,
-    @SerialName("\$refType") val type: RefType,
+    @SerialName("\$refType") val type: String,
 )
-
-enum class RefType {
-    colors
-}
