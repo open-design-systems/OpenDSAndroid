@@ -2,7 +2,8 @@ package com.opends.sample
 
 private enum class Destinations {
     START,
-    ColorScreen
+    ColorScreen,
+    TypographySrceen
 }
 
 sealed interface NavigationDestinations {
@@ -14,5 +15,8 @@ sealed interface NavigationDestinations {
     }
     data object ColorScreen : NavigationDestinations {
         override val route: String = Destinations.ColorScreen.name
+    }
+    data object TypographyScreen : NavigationDestinations {
+        override val route: String = Destinations.TypographySrceen.name
     }
 }
