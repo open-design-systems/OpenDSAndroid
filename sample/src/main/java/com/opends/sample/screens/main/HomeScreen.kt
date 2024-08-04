@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.opends.OpenDesignSystemTheme
 import com.opends.sample.NavigationDestinations
 
 @Composable
@@ -22,7 +23,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     buttons: List<Pair<String, NavigationDestinations>> = listOf(
-        "Colors" to NavigationDestinations.ColorScreen
+        "Colors" to NavigationDestinations.ColorScreen,
+        "Typography" to NavigationDestinations.TypographyScreen,
     )
 ) {
     Column(
@@ -63,5 +65,7 @@ fun Buttons(
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 private fun HomeScreenPreview() {
-    HomeScreen(navController = NavHostController(LocalContext.current))
+    OpenDesignSystemTheme {
+        HomeScreen(navController = NavHostController(LocalContext.current))
+    }
 }
