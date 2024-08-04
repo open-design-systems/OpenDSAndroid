@@ -12,6 +12,7 @@ import com.squareup.kotlinpoet.PropertySpec
 class TypographyCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val typographyToMaterial: TypographyToMaterial
 ) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -22,6 +23,7 @@ class TypographyCreator(
             add(createColorPallet(content.typography.values.toSet()))
 
             add(writeSpacingInstance(content.typography.values.toSet()))
+            add(typographyToMaterial.toMaterial3(content.typography.values.toSet()))
         }
     }
 

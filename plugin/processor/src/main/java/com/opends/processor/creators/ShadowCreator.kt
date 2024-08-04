@@ -20,6 +20,7 @@ import java.lang.reflect.Type
 class ShadowCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val colorNightCreator: ColorNightCreator
 ) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -90,7 +91,8 @@ class ShadowCreator(
 
         val shadowType = DataClassSpecBuilder("ShadowType")
             .addProperty("elevation", Dp::class.java)
-            .addProperty("shadowColor", Color::class.java)
+            .addProperty("shadowColorLight", Color::class.java)
+            .addProperty("shadowColorDark", Color::class.java)
             .addProperty("opacity", Float::class.java)
             .addProperty("radius", Float::class.java)
             .addProperty("offset", ClassName(filesTypesFactory.getPackage(), "ShadowOffset"))
@@ -113,7 +115,10 @@ class ShadowCreator(
             )
         }
 
-        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.getPalletFileName())
+        return FileSpec.builder(
+            filesTypesFactory.getPackage(),
+            filesTypesFactory.getPalletFileName()
+        )
             .addProperties(mappedColors)
             .build()
     }
@@ -121,7 +126,6 @@ class ShadowCreator(
     private fun colorsToPropertySpec(
         pair: Pair<String, Shadows>
     ): PropertySpec {
-        val memberColor = MemberName("androidx.compose.ui.graphics", "Color")
         val shadowTypeClass = ClassName(filesTypesFactory.getPackage(), "ShadowType")
         val member = MemberName(filesTypesFactory.getPackage(), "ShadowType")
         val dpMember = MemberName("androidx.compose.ui.unit", "dp")
@@ -133,6 +137,8 @@ class ShadowCreator(
             .add(")")
             .build()
 
+        val shadowColorRef = pair.second.shadowColor.ref.split(".").last()
+
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
                 CodeBlock.builder()
@@ -142,9 +148,12 @@ class ShadowCreator(
                     .addStatement("opacity=%Lf,", pair.second.shadowOpacity)
                     .addStatement("radius=%Lf,", pair.second.shadowRadius)
                     .addStatement(
-                        "shadowColor=%M(0xff%L)",
-                        memberColor,
-                        pair.second.shadowColor.removePrefix("#")
+                        "shadowColorLight=%L,",
+                        colorNightCreator.colorRefToLight(shadowColorRef)
+                    )
+                    .addStatement(
+                        "shadowColorDark=%L",
+                        colorNightCreator.colorRefToDark(shadowColorRef)
                     )
                     .addStatement(")")
                     .build()
@@ -173,7 +182,10 @@ class ShadowCreator(
             .initializer(codeBlock.build())
             .build()
 
-        return FileSpec.builder(filesTypesFactory.getPackage(), filesTypesFactory.createInstanceClassName())
+        return FileSpec.builder(
+            filesTypesFactory.getPackage(),
+            filesTypesFactory.createInstanceClassName()
+        )
             .addProperty(property)
             .build()
     }
