@@ -84,8 +84,8 @@ val colors = if (isDarkTheme) {
     LightOpenColorInstance
 }
 
-val newColors = colorToMaterial3Colors(colors)
-val newTypos = typographyToMaterial3Typography(typo = OpenDesignSystemTheme.typography)
+val colorsInMaterial = colorToMaterial3Colors(colors)
+val typographyInMaterial = typographyToMaterial3Typography(typo = OpenDesignSystemTheme.typography)
 
 CompositionLocalProvider(
         OpenDesignSystemTheme.LocalOpenDsColor provides colors,
@@ -94,8 +94,8 @@ CompositionLocalProvider(
         OpenDesignSystemTheme.LocalOpenDsShadow provides OpenDesignSystemTheme.shadow
     ) {
 MaterialTheme(
-    colorScheme = newColors,
-    typography = newTypos,
+    colorScheme = colorsInMaterial,
+    typography = typographyInMaterial,
     content = content
 )
 }
