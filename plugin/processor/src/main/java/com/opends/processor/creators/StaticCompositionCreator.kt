@@ -2,7 +2,6 @@ package com.opends.processor.creators
 
 import androidx.compose.runtime.ProvidableCompositionLocal
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
@@ -20,7 +19,6 @@ class StaticCompositionCreator {
             ProvidableCompositionLocal::class.java.asClassName()
                 .parameterizedBy(classType)
         )
-            .addModifiers(KModifier.PRIVATE)
             .initializer("staticCompositionLocalOf { %M }", instanceName)
             .build()
     }

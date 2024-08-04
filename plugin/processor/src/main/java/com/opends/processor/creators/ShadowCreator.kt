@@ -207,9 +207,4 @@ class ShadowCreator(
             creatorFilesName = filesTypesFactory
         )
     }
-
-    companion object {
-        private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
-        private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
-    }
 }
