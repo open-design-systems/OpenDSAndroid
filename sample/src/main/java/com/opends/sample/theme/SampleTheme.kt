@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import com.opends.color.DarkOpenColorInstance
 import com.opends.color.LightOpenColorInstance
+import com.opends.color.colorToMaterial3Colors
 import com.opends.typography.OpenTypographyInstance
 
 @Composable
@@ -16,12 +17,7 @@ fun SampleTheme(content: @Composable () -> Unit) {
         LightOpenColorInstance
     }
 
-    val newColors = MaterialTheme.colorScheme.copy(
-        primary = colors.primary,
-        secondary = colors.secondary,
-        background = colors.background,
-        surface = colors.background
-    )
+    val newColors = colorToMaterial3Colors(colors)
 
     val typography = MaterialTheme.typography.copy(
         bodyMedium = OpenTypographyInstance.bodyMedium,

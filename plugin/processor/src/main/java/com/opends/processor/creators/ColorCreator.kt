@@ -1,5 +1,6 @@
 package com.opends.processor.creators
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.open.design.system.ColorData
 import com.open.design.system.OpenColor
@@ -8,6 +9,7 @@ import com.opends.processor.writeThemeAccessor
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -29,6 +31,7 @@ class ColorCreator(
 
             add(writeColorInstance(colorNightCreator.getLightColorModifierName(), colors))
             add(writeColorInstance(colorNightCreator.getDarkColorModifierName(), colors))
+            add(colorToMaterialColors(colors))
         }
     }
 
@@ -123,11 +126,74 @@ class ColorCreator(
         ).toFileSpec(filesTypesFactory)
     }
 
+    private fun colorToMaterialColors(colors: Set<OpenColor>): FileSpec {
+        val builder = CodeBlock.builder()
+            .add("return androidx.compose.material3.MaterialTheme.colorScheme.copy(")
+
+        colors.filter { materialColorsList.contains(it.meta.name) }
+            .forEach {
+                val propertyName = it.meta.name
+                builder.addStatement("%L = colors.%L,", propertyName, propertyName)
+            }
+
+        builder.add(")")
+
+        val funSpec = FunSpec.builder("colorToMaterial3Colors")
+            .addParameter("colors", filesTypesFactory.createClassName())
+            .addAnnotation(Composable::class)
+            .returns(ClassName("androidx.compose.material3", "ColorScheme"))
+            .addCode(builder.build())
+
+        val file = FileSpec.builder(filesTypesFactory.getPackage(), "ColorToMaterialConverter")
+            .addFunction(funSpec.build())
+
+
+        return file.build()
+    }
+
     private companion object {
         private const val COLOR_INSTANCE_MODIFIER_LIGHT = "Light"
         private const val COLOR_INSTANCE_MODIFIER_DARK = "Dark"
         private const val STRING_HEX_RADIX = 16
         private const val MAX_INT_COLOR_RANGE_CONVERTER = 255
+        private val materialColorsList = setOf(
+            "primary",
+            "onPrimary",
+            "primaryContainer",
+            "onPrimaryContainer",
+            "inversePrimary",
+            "secondary",
+            "onSecondary",
+            "secondaryContainer",
+            "onSecondaryContainer",
+            "tertiary",
+            "onTertiary",
+            "tertiaryContainer",
+            "onTertiaryContainer",
+            "background",
+            "onBackground",
+            "surface",
+            "onSurface",
+            "surfaceVariant",
+            "onSurfaceVariant",
+            "surfaceTint",
+            "inverseSurface",
+            "inverseOnSurface",
+            "error",
+            "onError",
+            "errorContainer",
+            "onErrorContainer",
+            "outline",
+            "outlineVariant",
+            "scrim",
+            "surfaceBright",
+            "surfaceDim",
+            "surfaceContainer",
+            "surfaceContainerHigh",
+            "surfaceContainerHighest",
+            "surfaceContainerLow",
+            "surfaceContainerLowest",
+        )
     }
 }
 
