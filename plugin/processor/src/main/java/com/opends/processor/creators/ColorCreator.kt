@@ -15,6 +15,7 @@ import com.squareup.kotlinpoet.TypeSpec
 class ColorCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val colorNightCreator: ColorNightCreator
 ) : TypeCreator {
 
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
@@ -26,8 +27,8 @@ class ColorCreator(
             val colors = content.colors.values.toSet()
             add(createColorPallet(colors))
 
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_LIGHT, colors))
-            add(writeColorInstance(COLOR_INSTANCE_MODIFIER_DARK, colors))
+            add(writeColorInstance(colorNightCreator.getLightColorModifierName(), colors))
+            add(writeColorInstance(colorNightCreator.getDarkColorModifierName(), colors))
         }
     }
 

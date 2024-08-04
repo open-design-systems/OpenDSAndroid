@@ -20,6 +20,7 @@ import java.lang.reflect.Type
 class ShadowCreator(
     private val themePropertyCreator: ThemePropertyCreator,
     private val filesTypesFactory: FilesTypesFactory,
+    private val colorNightCreator: ColorNightCreator
 ) : TypeCreator {
     override fun createFiles(content: OpenDesignSystem): Set<FileSpec> {
         return buildSet {
@@ -137,7 +138,6 @@ class ShadowCreator(
             .build()
 
         val shadowColorRef = pair.second.shadowColor.ref.split(".").last()
-        val colorLocation = "com.opends.color."
 
         return PropertySpec.builder(pair.first, shadowTypeClass)
             .initializer(
@@ -149,11 +149,11 @@ class ShadowCreator(
                     .addStatement("radius=%Lf,", pair.second.shadowRadius)
                     .addStatement(
                         "shadowColorLight=%L,",
-                        colorLocation + shadowColorRef + COLOR_INSTANCE_MODIFIER_LIGHT
+                        colorNightCreator.colorRefToLight(shadowColorRef)
                     )
                     .addStatement(
                         "shadowColorDark=%L",
-                        colorLocation + shadowColorRef + COLOR_INSTANCE_MODIFIER_DARK
+                        colorNightCreator.colorRefToDark(shadowColorRef)
                     )
                     .addStatement(")")
                     .build()
