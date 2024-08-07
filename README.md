@@ -86,6 +86,11 @@ the same name as the material token
 
 This is done for colors and Typography
 
+## Recommendations
+
+We recommend to use OpenDSAndroid in just one module (that would be your design system module) and
+expose this module, this way only one instance of token will be created
+
 # R8 / Proguard
 
 TODO
