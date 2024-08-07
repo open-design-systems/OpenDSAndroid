@@ -13,19 +13,19 @@ The official Open Design System Android Plugin provides the easiest way to have 
 
 ```kotlin
 dependencyResolutionManagement {
-		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-		repositories {
-			mavenCentral()
-			maven { url "https://www.jitpack.io" }
-		}
-	}
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url "https://www.jitpack.io" }
+    }
+}
 ```
 
 3. Go to your desired module `build.gradle` and import `OpenDSAndroid`
 
 ```kotlin
 dependencies {
-		implementation("open-design-systems:OpenDSAndroid:<VERSION>")
+    implementation("open-design-systems:OpenDSAndroid:<VERSION>")
 }
 ```
 
@@ -55,10 +55,9 @@ openDS {
 }
 ```
 
-| Config | Description |
-|---| --- |
-| themeLocation | point to the location where the theme is located in our project, in the given
-example is inside the folder theme in the `sample` module |
+| Config | Description                                                                                                                             |
+|---|-----------------------------------------------------------------------------------------------------------------------------------------|
+| themeLocation | point to the location where the theme is located in our project, in the given example is inside the folder theme in the `sample` module |
 
 ## Generated tokens
 
