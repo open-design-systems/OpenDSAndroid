@@ -11,6 +11,9 @@ java {
 }
 
 gradlePlugin {
+    website.set("https://github.com/open-design-systems/OpenDSAndroid")
+    vcsUrl.set("https://github.com/open-design-systems/OpenDSAndroid")
+
     plugins {
         register("opends") {
             id = "com.opends"
