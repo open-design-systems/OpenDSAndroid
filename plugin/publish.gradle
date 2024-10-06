@@ -7,7 +7,7 @@ publishing.publications {
 
         pom {
             name = POM_NAME
-            //packaging = POM_PACKAGING
+            packaging = POM_PACKAGING
             description = POM_DESCRIPTION
             url = POM_URL
 
