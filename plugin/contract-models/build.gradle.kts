@@ -4,6 +4,8 @@ plugins {
     kotlin("plugin.serialization") version "2.0.0-RC3"
 }
 
+version = properties["POM_VERSION"].toString()
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -12,4 +14,8 @@ java {
 dependencies {
     implementation("com.squareup:kotlinpoet:1.17.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0-RC")
+}
+
+apply {
+    from("$rootDir/publish.gradle")
 }
