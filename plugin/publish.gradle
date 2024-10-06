@@ -1,36 +1,32 @@
 apply plugin: "maven-publish"
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = "com.opends.plugin"
+publishing.publications {
+    maven(MavenPublication) {
 
-            repositories {
-                mavenLocal()
+        artifactId = POM_ARTIFACT_ID
+
+        pom {
+            name = POM_NAME
+            //packaging = POM_PACKAGING
+            description = POM_DESCRIPTION
+            url = POM_URL
+
+            scm {
+                connection = POM_SCM_CONNECTION
+                developerConnection = POM_SCM_DEV_CONNECTION
+                url = POM_SCM_URL
             }
 
-            pom {
-                name = POM_NAME
-                packaging = POM_PACKAGING
-                description = POM_DESCRIPTION
-                url = POM_URL
-
-                scm {
-                    connection = POM_SCM_CONNECTION
-                    developerConnection = POM_SCM_DEV_CONNECTION
-                    url = POM_SCM_URL
-                }
-
-                developers {
-                    developer {
-                        id = POM_DEVELOPER_ID
-                        name = POM_DEVELOPER_NAME
-                        email = POM_DEVELOPER_EMAIL
-                    }
+            developers {
+                developer {
+                    id = POM_DEVELOPER_ID
+                    name = POM_DEVELOPER_NAME
+                    email = POM_DEVELOPER_EMAIL
                 }
             }
-
-            from components.java
         }
+
+        from components.java
     }
 }
+
