@@ -3,5 +3,5 @@ plugins {
 }
 
 allprojects {
-    group = "com.opends.gradle"
+    group = "studio.opends"
 }
