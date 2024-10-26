@@ -16,10 +16,10 @@ gradlePlugin {
 
     plugins {
         register("opends") {
-            id = "com.opends"
+            id = "studio.opends"
             displayName = "OpenDSAndroid"
             description = "OpenDSAndroid plugin to create android theme configuration"
-            implementationClass = "com.open.design.system.plugin.OpenDesignSystemPlugin"
+            implementationClass = "studio.opends.plugin.OpenDesignSystemPlugin"
             tags.addAll(listOf("android", "theme", "compose-theme", "apps", "mobile"))
         }
     }
