@@ -8,5 +8,5 @@ plugins {
 }
 
 allprojects {
-    group = "com.opends.gradle"
+    group = "sutdio.opends.gradle"
 }
