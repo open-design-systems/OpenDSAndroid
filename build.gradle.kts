@@ -6,3 +6,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinJvm) apply false
     alias(libs.plugins.androidLibrary) apply false
 }
+
+allprojects {
+    group = "com.opends.gradle"
+}
