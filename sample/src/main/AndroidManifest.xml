@@ -9,7 +9,7 @@
         android:supportsRtl="true">
         <activity
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:name="com.opends.sample.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

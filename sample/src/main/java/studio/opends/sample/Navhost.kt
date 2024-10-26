@@ -1,4 +1,4 @@
-package com.opends.sample
+package studio.opends.sample
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

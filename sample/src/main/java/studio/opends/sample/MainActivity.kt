@@ -1,4 +1,4 @@
-package com.opends.sample
+package studio.opends.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

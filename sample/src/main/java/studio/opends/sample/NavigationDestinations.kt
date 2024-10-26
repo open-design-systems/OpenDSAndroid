@@ -1,4 +1,4 @@
-package com.opends.sample
+package studio.opends.sample
 
 private enum class Destinations {
     START,

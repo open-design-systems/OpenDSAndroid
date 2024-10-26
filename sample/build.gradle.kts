@@ -10,11 +10,11 @@ openDS {
 }
 
 android {
-    namespace = "com.opends.sample"
+    namespace = "studio.opends.sample"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.opends.sample"
+        applicationId = "studio.opends.sample"
         minSdk = 21
         targetSdk = 35
         versionCode = 1

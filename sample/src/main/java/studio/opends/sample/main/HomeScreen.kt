@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.opends.OpenDesignSystemTheme
-import com.opends.sample.NavigationDestinations
+import studio.opends.sample.NavigationDestinations
 
 @Composable
 fun HomeScreen(
