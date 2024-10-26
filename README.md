@@ -8,26 +8,27 @@ The official Open Design System Android Plugin provides the easiest way to have 
 
 `OpenDSAndroid` is available trough jitpack, so we need to add it to the project:
 
-1. Open you `settings.gradle` or `settings.gradle.kts`
-2. Make sure that the repositories section contains jitpack
+1. Go to your desired module `build.gradle` and import `OpenDSAndroid`
 
 ```kotlin
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenCentral()
-        maven { url "https://www.jitpack.io" }
-    }
+plugins {
+    id("studio.opends")
 }
 ```
 
-3. Go to your desired module `build.gradle` and import `OpenDSAndroid`
+## Configuration
 
-```kotlin
-dependencies {
-    implementation("open-design-systems:OpenDSAndroid:<VERSION>")
+You have some configurations that can be done in the plugin
+
+``` groovy
+openDS {
+    themeLocation = "$projectDir/theme/open-design-system.json"
 }
 ```
+
+| Config | Description                                                                                                                             |
+|---|-----------------------------------------------------------------------------------------------------------------------------------------|
+| themeLocation | point to the location where the theme is located in our project, in the given example is inside the folder theme in the `sample` module |
 
 # Creating a contract theme
 
@@ -44,20 +45,6 @@ Once you have the plugin you can force the tokens to be create running
 
 or simple running your project (is important to remember that the module that you applied this 
 library is being used by the project).
-
-## Configuration
-
-You have some configurations that can be done in the plugin
-
-``` groovy
-openDS {
-    themeLocation = "$projectDir/theme/open-design-system.json"
-}
-```
-
-| Config | Description                                                                                                                             |
-|---|-----------------------------------------------------------------------------------------------------------------------------------------|
-| themeLocation | point to the location where the theme is located in our project, in the given example is inside the folder theme in the `sample` module |
 
 ## Generated tokens
 
@@ -93,6 +80,4 @@ expose this module, this way only one instance of token will be created
 
 # R8 / Proguard
 
-TODO
-
-# License
+AndroidOpenDS work with R8/Proguard without any problems or changes needed in your rules
